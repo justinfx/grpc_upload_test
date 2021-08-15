@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option go_package = "grpc_file_test/uploader";
+
+import "google/protobuf/empty.proto";
+package uploader;
+
+service Uploader {
+  rpc Upload(FileTransferRequest) returns (google.protobuf.Empty) {}
+  rpc UploadStream(stream FileStreamRequest) returns (google.protobuf.Empty) {}
+}
+
+message FileTransferRequest {
+  FileHeader header = 1;
+  bytes data = 2;
+}
+
+message FileStreamRequest {
+  oneof contents {
+    FileHeader header = 1;
+    bytes chunk = 2;
+  }
+}
+
+message FileHeader {
+  string name = 1;
+  optional int64 file_size = 2;
+}
